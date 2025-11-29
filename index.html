@@ -1,0 +1,887 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>냥! 서버 규칙 안내</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #030712;
+      --panel-bg: rgba(15, 23, 42, 0.96);
+      --accent: #f5ecda;
+      --accent-soft: #e7dcc7;
+      --muted: #9ca3af;
+      --muted-soft: #6b7280;
+      --gold: #facc6b;
+      --gold-soft: #fbbf24;
+      --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.9);
+      --radius-card: 1.6rem;
+      --radius-chip: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #111827 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, transparent 60%),
+        radial-gradient(circle at top right, rgba(234, 179, 8, 0.08) 0, transparent 55%),
+        linear-gradient(to bottom, var(--bg-soft), var(--bg));
+      color: var(--accent);
+      line-height: 1.7;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: rgba(250, 204, 21, 0.3);
+      color: var(--accent);
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+      z-index: -1;
+    }
+
+    .layout {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* 상단 헤더 (게임 공식 사이트 느낌) */
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1.6rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 60px;
+      height: 60px;
+      border-radius: 1.2rem;
+      padding: 3px;
+      background: conic-gradient(
+        from 220deg,
+        rgba(250, 204, 21, 0.95),
+        rgba(251, 191, 36, 0.15),
+        rgba(24, 24, 27, 1),
+        rgba(250, 204, 21, 0.95)
+      );
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      flex-shrink: 0;
+    }
+
+    .brand-mark-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .brand-mark-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .site-title {
+      font-size: clamp(1.7rem, 3vw, 2.1rem);
+      font-weight: 770;
+      letter-spacing: 0.03em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: baseline;
+    }
+
+    .site-title span.highlight {
+      font-size: 0.95rem;
+      padding: 0.18rem 0.8rem;
+      border-radius: var(--radius-chip);
+      border: 1px solid rgba(250, 204, 21, 0.65);
+      background: rgba(12, 10, 9, 0.96);
+      color: var(--gold-soft);
+      white-space: nowrap;
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      color: var(--muted-soft);
+      margin-top: 0.35rem;
+      max-width: 600px;
+    }
+
+    .tagline strong {
+      color: var(--accent-soft);
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.4rem;
+      min-width: 200px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.9rem;
+      border-radius: var(--radius-chip);
+      font-size: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.25), rgba(15, 23, 42, 0.96));
+      color: var(--muted);
+    }
+
+    .status-pill .status-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: #eab308;
+      box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.2);
+      flex-shrink: 0;
+    }
+
+    .server-address {
+      font-size: 0.8rem;
+      color: var(--muted-soft);
+    }
+
+    /* 메인 패널 */
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.02), transparent 55%), var(--panel-bg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 1.9rem 2rem 1.7rem;
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(250, 204, 21, 0.16), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.9), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .panel-header-row,
+    .divider,
+    .notice-shell,
+    .footer-note {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-copy h2 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .panel-copy p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 640px;
+    }
+
+    .panel-copy p strong {
+      color: var(--accent-soft);
+    }
+
+    .panel-meta {
+      display: grid;
+      grid-auto-flow: row;
+      gap: 0.55rem;
+      font-size: 0.78rem;
+      min-width: 190px;
+    }
+
+    .panel-meta-item {
+      padding: 0.5rem 0.8rem;
+      border-radius: 0.7rem;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+    }
+
+    .panel-meta-item dt {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.7rem;
+      color: var(--muted-soft);
+      margin-bottom: 0.12rem;
+    }
+
+    .panel-meta-item dd {
+      color: var(--accent-soft);
+    }
+
+    .divider {
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(to right, transparent, rgba(250, 204, 21, 0.85), transparent);
+      opacity: 0.9;
+      margin-bottom: 1.3rem;
+    }
+
+    /* 금색 공지 프레임 */
+
+    .notice-shell {
+      border-radius: 1.5rem;
+      padding: 1.6px;
+      background: conic-gradient(
+        from 225deg,
+        rgba(250, 204, 21, 0.95),
+        rgba(234, 179, 8, 0.25),
+        rgba(37, 30, 21, 0.95),
+        rgba(250, 204, 21, 0.95)
+      );
+      position: relative;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    .notice-shell-inner {
+      position: relative;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at top, rgba(250, 250, 249, 0.02), transparent 60%),
+        radial-gradient(circle at bottom, rgba(15, 23, 42, 0.98), rgba(12, 10, 9, 1));
+      padding: 1.1rem 1.1rem 1.2rem;
+      overflow: hidden;
+    }
+
+    .corner-deco {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border-top: 1px solid rgba(250, 204, 21, 0.9);
+      border-left: 1px solid rgba(250, 204, 21, 0.9);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .corner-deco.tr {
+      top: 10px;
+      right: 10px;
+      transform: rotate(90deg);
+    }
+
+    .corner-deco.bl {
+      bottom: 10px;
+      left: 10px;
+      transform: rotate(270deg);
+    }
+
+    .corner-deco.br {
+      bottom: 10px;
+      right: 10px;
+      transform: rotate(180deg);
+    }
+
+    .notice-scroll-wrapper {
+      position: relative;
+    }
+
+    .scroll-fade {
+      position: absolute;
+      left: 0;
+      right: 8px;
+      height: 18px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .scroll-fade--top {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(12, 10, 9, 0.98), transparent);
+    }
+
+    .scroll-fade--bottom {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(12, 10, 9, 0.98), transparent);
+    }
+
+    .notice-scroll {
+      position: relative;
+      z-index: 1;
+      max-height: 460px;
+      overflow-y: auto;
+      padding: 0.55rem 0.9rem 0.55rem 0.45rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(250, 204, 21, 0.85) rgba(12, 10, 9, 1);
+    }
+
+    .notice-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .notice-scroll::-webkit-scrollbar-track {
+      background: rgba(12, 10, 9, 1);
+      border-radius: 999px;
+    }
+
+    .notice-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, rgba(250, 204, 21, 0.98), rgba(217, 119, 6, 0.9));
+      border-radius: 999px;
+    }
+
+    .notice-scroll::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to bottom, rgba(250, 204, 21, 1), rgba(180, 83, 9, 1));
+    }
+
+    /* 규칙 인트로 + 리스트 */
+
+    .rules-intro {
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+      margin-bottom: 1.1rem;
+      background: rgba(17, 24, 39, 0.98);
+      border-radius: 0.8rem;
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(250, 204, 21, 0.65);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.95);
+      position: relative;
+    }
+
+    .rules-intro-inner {
+      position: relative;
+      padding-left: 52px;
+    }
+
+    .rules-intro-text strong {
+      color: var(--gold-soft);
+    }
+
+    .rules {
+      font-size: 0.93rem;
+      color: rgba(248, 250, 252, 0.9);
+    }
+
+    .rule-block {
+      padding: 0.95rem 0 1.05rem;
+      border-top: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .rule-block:first-of-type {
+      border-top: none;
+      padding-top: 0.35rem;
+    }
+
+    .rule-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .rule-number {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.08rem 0.65rem;
+      border-radius: var(--radius-chip);
+      border: 1px solid rgba(250, 204, 21, 0.75);
+      background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.28), rgba(15, 23, 42, 0.98));
+      color: var(--gold-soft);
+    }
+
+    .rule-title {
+      font-weight: 670;
+      font-size: 0.99rem;
+      color: var(--accent);
+    }
+
+    .rule-body {
+      margin-top: 0.3rem;
+    }
+
+    .rule-body ul {
+      margin-top: 0.25rem;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .rule-body li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .rule-body li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #fef9c3 0, #facc15 40%, #b45309 75%);
+      box-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+      transform: translateY(-50%);
+    }
+
+    .rule-body strong {
+      color: var(--accent-soft);
+    }
+
+    .rule-note {
+      font-size: 0.86rem;
+      color: var(--muted-soft);
+      margin-top: 0.4rem;
+    }
+
+    /* 하단 푸터 텍스트 */
+
+    .footer-note {
+      margin-top: 1.7rem;
+      padding-top: 1.2rem;
+      border-top: 1px dashed rgba(75, 85, 99, 0.9);
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .footer-note .small {
+      font-size: 0.82rem;
+      color: var(--muted-soft);
+      margin-top: 0.4rem;
+    }
+
+    /* 고양이 SVG 장식 */
+
+    .cat-deco,
+    .cat-inline {
+      color: rgba(250, 204, 21, 0.9);
+    }
+
+    .cat-deco {
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .cat-deco--panel-top-right {
+      top: -34px;
+      right: -24px;
+      transform: rotate(12deg);
+    }
+
+    .cat-deco--panel-bottom-left {
+      bottom: -38px;
+      left: -26px;
+      transform: scale(0.9) rotate(-14deg);
+    }
+
+    .cat-inline {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      opacity: 0.95;
+    }
+
+    @media (max-width: 880px) {
+      body {
+        padding: 2rem 1.2rem;
+      }
+
+      .panel {
+        padding: 1.7rem 1.5rem 1.5rem;
+      }
+
+      .panel-meta {
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 1.6rem 0.9rem;
+      }
+
+      .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .header-right {
+        align-items: flex-start;
+      }
+
+      .panel-meta {
+        grid-auto-flow: row;
+        width: 100%;
+      }
+
+      .notice-scroll {
+        max-height: 400px;
+      }
+
+      .panel {
+        padding: 1.5rem 1.2rem 1.4rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- 고양이 SVG 심볼: 한 번만 정의하고 아래에서 재사용 -->
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute; left:-9999px; top:-9999px; overflow:hidden;">
+    <symbol id="nyang-cat" viewBox="0 0 80 80">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="40" cy="44" r="20" />
+        <polygon points="28,28 22,12 36,20" />
+        <polygon points="52,28 64,12 58,28" />
+        <circle cx="33" cy="42" r="2.2" />
+        <circle cx="47" cy="42" r="2.2" />
+        <path d="M36 48 Q40 51 44 48" />
+        <line x1="26" y1="44" x2="14" y2="40" />
+        <line x1="26" y1="48" x2="14" y2="50" />
+        <line x1="54" y1="44" x2="66" y2="40" />
+        <line x1="54" y1="48" x2="66" y2="50" />
+      </g>
+    </symbol>
+  </svg>
+
+  <main class="layout">
+    <!-- 상단 헤더 -->
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <div class="brand-mark-inner">
+            <!-- ⚠️ 여기에 서버 로고 파일 경로를 맞춰주세요 -->
+            <img src="nyang-logo.png" alt="냥! 서버 로고" />
+          </div>
+        </div>
+        <div class="brand-text">
+          <p class="eyebrow">NYANG! SCP: SECRET LABORATORY</p>
+          <h1 class="site-title">
+            냥! 서버 규칙
+            <span class="highlight">규칙을 몰랐다는 이유는 면책 사유가 아닙니다.</span>
+          </h1>
+          <p class="tagline">
+            냥! 서버는 모두가 <strong>기분 좋게 게임을 즐길 수 있는 공간</strong>입니다.  
+            아래 규칙은 그 즐거움을 지키기 위한 최소한의 약속입니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>NYANG! OFFICIAL NOTICE PAGE</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 규칙 패널 -->
+    <section class="panel" aria-label="냥! 서버 규칙 상세 안내">
+      <!-- 패널 배경 고양이들 -->
+      <svg class="cat-deco cat-deco--panel-top-right" aria-hidden="true">
+        <use href="#nyang-cat"></use>
+      </svg>
+      <svg class="cat-deco cat-deco--panel-bottom-left" aria-hidden="true">
+        <use href="#nyang-cat"></use>
+      </svg>
+
+      <div class="panel-header-row">
+        <div class="panel-copy">
+          <h2>GUIDE</h2>
+          <p>
+            서버에 접속하는 순간, 아래 규칙에 동의한 것으로 간주됩니다.<br />  
+            규칙을 읽지 않았다는 이유는 <strong>면책 사유가 되지 않습니다.</strong>
+          </p>
+        </div>
+        <dl class="panel-meta">
+          <div class="panel-meta-item">
+            <dt>Last Updated</dt>
+            <dd>2025-11-29</dd>
+          </div>
+          <div class="panel-meta-item">
+            <dt>Server</dt>
+            <dd>냥! (NYANG!) Official</dd>
+          </div>
+          <div class="panel-meta-item">
+            <dt>Scope</dt>
+            <dd>전체 인원 공통 규칙</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 공지 프레임 -->
+      <div class="notice-shell">
+        <div class="notice-shell-inner">
+          <span class="corner-deco tr"></span>
+          <span class="corner-deco bl"></span>
+          <span class="corner-deco br"></span>
+
+          <div class="notice-scroll-wrapper">
+            <div class="scroll-fade scroll-fade--top"></div>
+            <div class="scroll-fade scroll-fade--bottom"></div>
+
+            <div class="notice-scroll" role="region" aria-label="냥! 서버 규칙 전문">
+              <div class="rules-intro">
+                <div class="rules-intro-inner">
+                  <!-- 인트로 왼쪽에 작은 고양이 -->
+                  <svg class="cat-inline" aria-hidden="true">
+                    <use href="#nyang-cat"></use>
+                  </svg>
+                  <div class="rules-intro-text">
+                    <strong>[냥! 서버 규칙 안내]</strong><br />
+                    규칙을 몰랐다는 이유는 <strong>면책 사유가 아닙니다.</strong><br />
+                    규칙 위반 시 제재가 적용될 수 있으니, 반드시 한 번 이상 정독해 주세요.
+                  </div>
+                </div>
+              </div>
+
+              <section class="rules">
+                <!-- 1. 기본 매너 & 태도 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">1</span>
+                    <h3 class="rule-title">기본 매너 & 태도</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>욕설, 비하, 차별·혐오 발언, 가족/신상 언급, 특정인 집요 괴롭힘 금지</li>
+                      <li>정치·논쟁 유도, 분란 조장, 과한 분탕, 타 서버 언급 금지</li>
+                      <li>혐오·선정성·과도한 정치 등 <strong>부적절한 닉네임·프로필·상태메시지</strong> 사용 금지</li>
+                      <li>채팅에서의 도배, 분란 조장, 특정 유저 저격·조롱, 과도한 패드립 등 금지</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 2. 아군 사살 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">2</span>
+                    <h3 class="rule-title">아군 사살 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>SCP-018로 아군·같은 진영을 노리고 사살/중상 입히는 악의적 사용 금지</li>
+                      <li>그 외 <strong>고의적인 아군 사살</strong> 역시 동일하게 제재</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 3. 4분 이상 존버 금지 (AFK) -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">3</span>
+                    <h3 class="rule-title">4분 이상 존버 금지 (AFK)</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>게임 진행과 무관하게 한 위치에서 <strong>4분 이상 움직이지 않는 행위 금지</strong></li>
+                      <li>라운드 지연 목적의 과도한 캠핑·자리 비움은 경고 후 관전 전환 또는 킥될 수 있음</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 4. 사무구역 문 트롤 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">4</span>
+                    <h3 class="rule-title">사무구역 문 트롤 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>문을 반복적으로 열고 닫으며 이동을 방해하는 행위 금지</li>
+                      <li>탈출·합류·전투를 명백히 방해하기 위한 문·엘리베이터 조작 금지</li>
+                      <li>아군을 괴롭히려는 의도의 문 트롤로 판단될 경우 <strong>경고 없이 제재</strong></li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 5. 보이스·채팅 비매너 & 보이스 테러 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">5</span>
+                    <h3 class="rule-title">보이스·채팅 비매너 & 보이스 테러 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>지속적인 고성방가, 악의적인 마이크 찢는 소리 금지</li>
+                      <li>음악·영상·밈 사운드 재생, 음성 변조 스팸 등 <strong>보이스 테러</strong> 금지</li>
+                      <li>성적 발언, 특정 유저 집요 조롱, 욕설 도배 등 금지</li>
+                      <li>(RP·연출을 위한 <strong>짧은 비명 정도만</strong> 허용, 과도하면 제재)</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 6. 티밍(Teaming) 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">6</span>
+                    <h3 class="rule-title">티밍(Teaming) 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>SCP vs 인원, NTF vs 혼돈의 반란 등 <strong>적대 진영 간 티밍 금지</strong></li>
+                      <li>적대 진영 간 고의적인 협력·동맹·일부러 살려주기 금지</li>
+                      <li>예: MTF가 SCP와 싸우는 카오스를 잠시 지켜본 뒤 양쪽 모두 처치하는 것은 허용</li>
+                      <li>서버 이벤트/운영진 공지로 허용된 특수 모드 외 <strong>모든 티밍 금지</strong></li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 7. 체포 규칙 & 체포킬 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">7</span>
+                    <h3 class="rule-title">체포 규칙 & 체포킬 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>체포된 플레이어의 이동·동행·처형 여부는 <strong>오직 체포자가 결정</strong></li>
+                      <li>체포자가 아닌 제3자는 <strong>체포킬 금지</strong></li>
+                    </ul>
+                    <p class="rule-note">
+                      반복 시 고의 위반으로 간주되어 <strong>강한 제재</strong>가 적용될 수 있습니다.
+                    </p>
+                  </div>
+                </article>
+
+                <!-- 8. 치트·버그·외부 프로그램 금지 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">8</span>
+                    <h3 class="rule-title">치트·버그·외부 프로그램 금지</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>핵·ESP·매크로 등 <strong>모든 불법 프로그램 사용 금지</strong></li>
+                      <li>의도되지 않은 버그·맵 틈·글리치 등을 이용한 이득 취득 및 악용 금지</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <!-- 9. 운영 및 제재 기준 -->
+                <article class="rule-block">
+                  <div class="rule-header">
+                    <span class="rule-number">9</span>
+                    <h3 class="rule-title">운영 및 제재 기준</h3>
+                  </div>
+                  <div class="rule-body">
+                    <ul>
+                      <li>
+                        규칙 위반 정도 및 누적 횟수에 따라<br />
+                        <strong>구두 경고 → 킥 → 일시 밴 → 영구 밴</strong>
+                      </li>
+                      <li>상황이 심각하다고 판단될 경우 일부 단계는 생략될 수 있음</li>
+                      <li>규칙 미숙지 및 “장난이었다”는 이유는 <strong>감경 사유가 아님</strong></li>
+                      <li>규칙 해석 및 최종 제재 여부는 <strong>서버 관리자·운영진 판단</strong>을 따름</li>
+                      <li>
+                        본 규칙에 명시되지 않은 행위라도,<br />
+                        상식적으로 보았을 때 <strong>트롤·악의적인 방해 행위</strong>라 판단될 경우 제재될 수 있음
+                      </li>
+                    </ul>
+                  </div>
+                </article>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <p>냥!은 규칙을 지키는 냥이를 선호합니다. - ˕ •マ</p>
+        <p>서로 매너를 지키며 즐거운 냥! 서버를 만들어 주세요! ♥</p>
+        <p class="small">
+          규칙과 관련해 궁금한 점이 있다면 운영진에게 문의해 주세요.<br />
+          문의 시, 상황 설명과 함께 가능한 한 많은 정보를 제공해 주시면 빠른 확인에 도움이 됩니다.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
